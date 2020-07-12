@@ -1,0 +1,16 @@
+# Build artifacts
+*.zip
+*.plan
+
+#  Local .terraform directories
+**/.terraform/*
+
+# .state files
+*.tfstate
+*.tfstate.*
+
+# .tfvars files - shouldn't be using these 
+*.tfvars
+
+# misc
+.DS_Store
