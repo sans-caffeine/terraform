@@ -26,6 +26,21 @@ resource "aws_s3_bucket_policy" "public" {
 }
 
 resource "aws_cloudfront_distribution" "cloudfront" {
+
+	origin {
+		domain_name = var.domain
+		origin_id   = "dummy-origin"
+
+		custom_origin_config {
+      http_port                = 80
+      https_port               = 443
+      origin_keepalive_timeout = 5
+      origin_protocol_policy   = "match-viewer"
+      origin_read_timeout      = 30
+      origin_ssl_protocols     = ["SSLv3", "TLSv1"]
+		}
+	}
+
   origin {
     domain_name = var.public_bucket.bucket_domain_name
     origin_id   = local.s3_public_origin_id
@@ -40,8 +55,13 @@ resource "aws_cloudfront_distribution" "cloudfront" {
   default_root_object = "index.html"
   comment             = var.domain
 
+	aliases = var.aliases
+
   viewer_certificate {
-    cloudfront_default_certificate = true 
+		acm_certificate_arn = var.certificate_arn
+    cloudfront_default_certificate = var.certificate_arn == null ? true : false 
+		minimum_protocol_version = var.certificate_arn == null ? null : "TLSv1.1_2016" // can this be set to TLSv1.1_2016 with default certificate?
+  	ssl_support_method = var.certificate_arn == null ? null : "sni-only"           // can this be set to sni-only with default certificate?
   }
 
   default_cache_behavior {
@@ -62,6 +82,36 @@ resource "aws_cloudfront_distribution" "cloudfront" {
     default_ttl            = 86400
     max_ttl                = 31536000
     compress = true
+  }
+
+  dynamic "ordered_cache_behavior" {
+    for_each = var.behavior
+    content {
+      path_pattern = behavior.value["path_pattern"]
+      allowed_methods  = ["GET", "HEAD"]
+      cached_methods   = ["GET", "HEAD"]
+			target_origin_id = behavior.value["dummy-origin"] ? "dummy-origin" : local.s3_public_origin_id
+
+			forwarded_values {
+				query_string = false
+				
+				cookies {
+					forward = "none"
+				}
+			}
+
+	    viewer_protocol_policy = "redirect-to-https"
+    	min_ttl                = 0
+    	default_ttl            = 86400
+    	max_ttl                = 31536000
+    	compress               = true
+
+    	lambda_function_association {
+      	event_type   = "viewer-request"
+      	include_body = false
+      	lambda_arn   = behavior.value["function"].qualified_arn
+			}
+    }
   }
 
   custom_error_response {
