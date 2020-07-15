@@ -85,12 +85,12 @@ resource "aws_cloudfront_distribution" "cloudfront" {
   }
 
   dynamic "ordered_cache_behavior" {
-    for_each = var.behavior
+    for_each = var.behaviors
     content {
-      path_pattern = behavior.value["path_pattern"]
+      path_pattern = ordered_cache_behavior.value.path_pattern
       allowed_methods  = ["GET", "HEAD"]
       cached_methods   = ["GET", "HEAD"]
-			target_origin_id = behavior.value["dummy-origin"] ? "dummy-origin" : local.s3_public_origin_id
+			target_origin_id = ordered_cache_behavior.value.dummy ? "dummy-origin" : local.s3_public_origin_id
 
 			forwarded_values {
 				query_string = false
@@ -109,7 +109,7 @@ resource "aws_cloudfront_distribution" "cloudfront" {
     	lambda_function_association {
       	event_type   = "viewer-request"
       	include_body = false
-      	lambda_arn   = behavior.value["function"].qualified_arn
+      	lambda_arn   = ordered_cache_behavior.value.function.qualified_arn
 			}
     }
   }

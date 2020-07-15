@@ -11,7 +11,7 @@ variable "public_bucket_access_block" {
   description = "The public storage bucket public access block"
 }
 
-variable "behavior" {
+variable "behaviors" {
 	description = "Cache behaviour settings"
 	default = []
 }
