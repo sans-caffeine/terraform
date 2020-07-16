@@ -7,25 +7,25 @@ resource "aws_cognito_user_pool_domain" "custom_domain" {
 }
 
 resource "aws_route53_record" "auth_v4" {
-  name    = "auth.${var.domain}"
-	type    = "A"
-	zone_id = var.zone.zone_id
+  name    = "auth.${var.domain}" 
+  type    = "A"
+  zone_id = var.zone.zone_id
 
   alias {
-		evaluate_target_health = false
+    evaluate_target_health = false
     name    = aws_cognito_user_pool_domain.custom_domain.cloudfront_distribution_arn
     zone_id = "Z2FDTNDATAQYW2"
-	}	
+  }
 }
 
 resource "aws_route53_record" "auth_v6" {
   name    = "auth.${var.domain}"
-	type    = "AAAA"
-	zone_id = var.zone.zone_id
+  type    = "AAAA"
+  zone_id = var.zone.zone_id
 
   alias {
-		evaluate_target_health = false
+    evaluate_target_health = false
     name    = aws_cognito_user_pool_domain.custom_domain.cloudfront_distribution_arn
     zone_id = "Z2FDTNDATAQYW2"
-	}	
+  }
 }

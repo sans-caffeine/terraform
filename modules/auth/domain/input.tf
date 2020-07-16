@@ -1,18 +1,18 @@
 variable "domain" {
-	type = string
-	description = "domain name of website"
+  type = string
+  description = "domain name of website"
 }
 
 variable "zone" {
-	description = "Zone defined in route53"
+  description = "Zone defined in route53"
 }
 
 variable "certificate" {
-	description = "Certificate for auth var.domain"
+  description = "Certificate for auth var.domain"
 }
 
 variable "auth_provider" {
-	description = "Authentication provider"
+  description = "Authentication provider"
 }
 
 variable "iam_depends_on" {
