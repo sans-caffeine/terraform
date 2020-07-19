@@ -1,5 +1,5 @@
 locals {
-	authorization = var.authorizer_id != null ? "COGNITO_USER_POOLS" : "NONE"
+  authorization = var.authorizer_id != null ? "COGNITO_USER_POOLS" : "NONE"
 }
 
 resource "aws_api_gateway_method" "method" {
@@ -8,8 +8,8 @@ resource "aws_api_gateway_method" "method" {
   http_method   = var.method
 
   authorization = local.authorization
-	authorizer_id = var.authorizer_id
-	authorization_scopes = var.scopes
+  authorizer_id = var.authorizer_id
+  authorization_scopes = var.scopes
 }
 
 resource "aws_api_gateway_method_response" "method" {
@@ -17,9 +17,9 @@ resource "aws_api_gateway_method_response" "method" {
   resource_id   = var.resource.id
   http_method   = aws_api_gateway_method.method.http_method
   status_code   = 200
-	response_models = {
-	"application/json" = "Empty"
-   }
+  response_models = {
+    "application/json" = "Empty"
+  }
 }
 
 resource "aws_api_gateway_integration" "method" {

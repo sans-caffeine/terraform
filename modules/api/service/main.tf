@@ -33,8 +33,8 @@ module "method_resources_post" {
   resource      = aws_api_gateway_resource.resources
   function      = var.function
   method        = "POST"
-	authorizer_id = var.authorizer_id
-	scopes        = var.scopes
+  authorizer_id = var.authorizer_id
+  scopes        = var.scopes
 }
 
 module "method_resource_id_options" {
@@ -60,8 +60,8 @@ module "method_resource_id_put" {
   resource      = aws_api_gateway_resource.resource
   function      = var.function
   method        = "PUT"
-	authorizer_id = var.authorizer_id
-	scopes        = var.scopes
+  authorizer_id = var.authorizer_id
+  scopes        = var.scopes
 }
 
 module "method_resource_id_delete" {
@@ -71,6 +71,6 @@ module "method_resource_id_delete" {
   resource      = aws_api_gateway_resource.resource
   function      = var.function
   method        = "DELETE"
-	authorizer_id = var.authorizer_id
-	scopes        = var.scopes
+  authorizer_id = var.authorizer_id
+  scopes        = var.scopes
 }
