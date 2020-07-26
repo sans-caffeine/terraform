@@ -26,12 +26,12 @@ variable "function" {
 }
 
 variable "authorizer_id" {
-	description = "The authorizer id used for validating authorisation"
-	default = null
+  description = "The authorizer id used for validating authorisation"
+  default = null
 }
 
 variable "scopes" {
-	type = list(string)
-	description = "The valid scopes a user requires to be authorised to this method"
-	default = null
+  type = list(string)
+  description = "The valid scopes a user requires to be authorised to this method"
+  default = null
 }
