@@ -1,9 +1,5 @@
-locals {
-  name = replace(var.domain,".","-")
-}
-
 resource "aws_cognito_user_pool_client" "user_pool_client" {
-  name         = local.name
+  name         = var.name
   user_pool_id = var.auth_provider.id
 
   callback_urls = var.callback_urls

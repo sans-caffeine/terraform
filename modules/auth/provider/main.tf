@@ -1,9 +1,5 @@
-locals {
-  name = replace(var.domain,".","-")
-}
-
 resource "aws_cognito_user_pool" "user_pool" {
-  name = local.name
+  name = var.name
   auto_verified_attributes = [ "email" ]
   alias_attributes = [ "email", "preferred_username" ]
   admin_create_user_config {
@@ -25,6 +21,6 @@ resource "aws_cognito_user_pool" "user_pool" {
 }
 
 resource "aws_cognito_user_pool_domain" "user_pool_domain" {
-  domain       = local.name
+  domain       = var.name
   user_pool_id = aws_cognito_user_pool.user_pool.id
 }

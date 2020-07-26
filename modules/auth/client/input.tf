@@ -1,6 +1,6 @@
-variable "domain" {
+variable "name" {
   type = string
-  description = "Domain name of website"
+  description = "The name of the authentication client"
 }
 
 variable "auth_provider" {
