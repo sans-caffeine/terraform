@@ -25,22 +25,25 @@ resource "aws_acm_certificate" "certificate" {
 resource "aws_route53_record" "certificate_validation" {
 	provider = aws.us-east-1
 
-  count   = length(var.subject_alternative_names) + 1
-  name    = lookup(aws_acm_certificate.certificate.domain_validation_options[count.index], "resource_record_name")
-  type    = lookup(aws_acm_certificate.certificate.domain_validation_options[count.index], "resource_record_type")
-  records = [lookup(aws_acm_certificate.certificate.domain_validation_options[count.index], "resource_record_value")]
+  for_each = {
+    for dvo in aws_acm_certificate.certificate.domain_validation_options : dvo.domain_name => {
+      name   = dvo.resource_record_name
+      record = dvo.resource_record_value
+      type   = dvo.resource_record_type
+    }
+  }
+
+  name    = each.value.name
   zone_id = var.zone.id
   ttl     = 60
+  records = [each.value.record]
+  type    = each.value.type
+  zone_id = var.zone.zone_id
 }
 
 resource "aws_acm_certificate_validation" "certificate" {
 	provider = aws.us-east-1
 
   certificate_arn         = aws_acm_certificate.certificate.arn
-
-	validation_record_fqdns = [
-		for record in aws_route53_record.certificate_validation:
-		record.fqdn
-	]
+  validation_record_fqdns = [for record in aws_route53_record.example : record.fqdn]
 }
-
