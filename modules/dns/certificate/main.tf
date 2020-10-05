@@ -22,7 +22,7 @@ resource "aws_acm_certificate" "certificate" {
 }
 
 # Creates route 53 records for validation of DNS
-resource "aws_route53_record" "certificate_validation" {
+resource "aws_route53_record" "certificate" {
 	provider = aws.us-east-1
 
   for_each = {
@@ -44,5 +44,5 @@ resource "aws_acm_certificate_validation" "certificate" {
 	provider = aws.us-east-1
 
   certificate_arn         = aws_acm_certificate.certificate.arn
-  validation_record_fqdns = [for record in aws_route53_record.example : record.fqdn]
+  validation_record_fqdns = [for record in aws_route53_record.certificate : record.fqdn]
 }
